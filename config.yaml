@@ -1,0 +1,156 @@
+---
+cog_bundle_version: 3
+
+name: pagerduty
+version: 0.1.0
+description: Interact with the pagerduty
+permissions:
+  - pagerduty:read
+  - pagerduty:write
+  - pagerduty:alert
+commands:
+  alert:
+    executable: /Users/mpeck/op/pagerduty/cog-command
+    documentation: |
+      pagerduty:alert [-s|--service <service name>] <msg> - Trigger an alert on the specified service
+      pagerduty:alert <msg> - Trigger an alert on the default service
+
+      Returns a confirmation message on success
+
+      Requires the following environment variables:
+
+        PAGERDUTY_ACCOUNT_SUBDOMAIN
+        PAGERDUTY_ACCOUNT_TOKEN
+
+      Behavior is configured by the following environment variables:
+
+        PAGERDUTY_DEFAULT_SERVICE_KEY - If no service is passed, this is the id of the service to use.
+
+      Note: If no service is passed and the default service key is not set, the command will fail.
+
+    rules:
+      - must have pagerduty:alert
+    options:
+      service:
+        type: string
+        required: false
+        short_flag: s
+  oncall:
+    executable: /Users/mpeck/op/pagerduty/cog-command
+    documentation: |
+      pagerduty:oncall - Return a list of services and the name and email of the primary oncall
+      pagerduty:oncall <service> - Return the oncall for the sepcified service
+
+      Requires the following environment variables:
+
+        PAGERDUTY_ACCOUNT_SUBDOMAIN
+        PAGERDUTY_ACCOUNT_TOKEN
+
+    rules: ["allow"]
+  ack:
+    executable: /Users/mpeck/op/pagerduty/cog-command
+    documentation: |
+      pagerduty:ack <incident id> - Acknowledge the incident
+      pagerduty:ack [-a | --as <pagerduty user email>] <incident id> Acknowledge the incident as the account specified by the email
+
+      Returns confirmation of acknowledgement
+
+      Requires the following environment variables:
+
+        PAGERDUTY_ACCOUNT_SUBDOMAIN
+        PAGERDUTY_ACCOUNT_TOKEN
+
+      Behavior is configured by the following environment variables:
+
+        PAGERDUTY_DEFAULT_EMAIL - The default pagerduty email to acknowledge incidents as
+        PAGERDUTY_EMAIL_FOR_<COG USER> - Used to map cog users to pagerduty emails
+
+      An email mapping to a pagerduty account is required in order to ack incidents. If the
+      '--as' option has been specified then that email will be used. If not this command will
+      first look for an environment variable in the form of 'PAGERDUTY_EMAIL_FOR_<COG USER>',
+      so if your user name is 'bob', the env var will be 'PAGERDUTY_EMAIL_FOR_BOB', and use
+      that email to acknowledge the incident. If that fails it will try 'PAGERDUTY_DEFAULT_EMAIL'
+      If none of those vars are specified and the '--as' option is not passed, the command will
+      fail.
+
+    rules:
+      - must have pagerduty:write
+    options:
+      as:
+        type: string
+        required: false
+        short_flag: a
+  resolve:
+    executable: /Users/mpeck/op/pagerduty/cog-command
+    documentation: |
+      pagerduty:resolve <incident id> - Resovle the incident
+      pagerduty:resolve [-a | --as <pagerduty user email>] <incident id> Resolve the incident as the account specified by the email
+
+      Returns confirmation of resolution
+
+      Requires the following environment variables:
+
+        PAGERDUTY_ACCOUNT_SUBDOMAIN
+        PAGERDUTY_ACCOUNT_TOKEN
+
+      Behavior is configured by the following environment variables:
+
+        PAGERDUTY_DEFAULT_EMAIL - The default pagerduty email to acknowledge incidents as
+        PAGERDUTY_EMAIL_FOR_<COG USER> - Used to map cog users to pagerduty emails
+
+      An email mapping to a pagerduty account is required in order to resolve incidents. If the
+      '--as' option has been specified then that email will be used. If not this command will
+      first look for an environment variable in the form of 'PAGERDUTY_EMAIL_FOR_<COG USER>',
+      so if your user name is 'bob' the env var will be 'PAGERDUTY_EMAIL_FOR_BOB', and use
+      that email to acknowledge the incident. If that fails it will try 'PAGERDUTY_DEFAULT_EMAIL'
+      If none of those vars are specified and the '--as' option is not passed, the command will
+      fail.
+
+    rules:
+      - must have pagerduty:write
+    options:
+      as:
+        type: string
+        required: false
+        short_flag: a
+  incidents:
+    executable: /Users/mpeck/op/pagerduty/cog-command
+    documentation: |
+      pagerduty:incidents [-a | --acked] [-t | --triggered] [-r | --resolved] [-l | --limit]
+
+      Returns incidents matching the specified option. By default, only returns triggered incidents.
+
+      Requires the following environment variables:
+
+        PAGERDUTY_ACCOUNT_SUBDOMAIN
+        PAGERDUTY_ACCOUNT_TOKEN
+
+    rules:
+      - must have pagerduty:read
+    options:
+      triggered:
+        type: bool
+        required: false
+        short_flag: t
+      acked:
+        type: bool
+        required: false
+        short_flag: a
+      resolved:
+        type: bool
+        required: false
+        short_flag: r
+      limit:
+        type: int
+        required: false
+        short_flag: l
+templates:
+  oncall:
+    slack: "{{ name }} - {{ oncall.name }}({{ oncall.email }})"
+    hipchat: "{{ name }} - {{ oncall.name }}({{ oncall.email }})"
+  incidents:
+    slack: "Service: {{ service.name }} {{ url }}\nStatus: {{ status }}\n{{ summary.subject }} {{ summary.description }}\n"
+    hipchat: "Service: {{ service.name }} {{ url }}\nStatus: {{ status }}\n{{ summary.subject }} {{ summary.description }}\n"
+  noresults:
+    slack: "Sorry, no results were returned."
+    hipchat: "Sorry, no results were returned."
