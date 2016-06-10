@@ -2,8 +2,11 @@
 cog_bundle_version: 3
 
 name: pagerduty
-version: 0.1.0
+version: 0.0.1
 description: Interact with the pagerduty
+docker:
+  image: cogcmd/pagerduty
+  tag: 0.0.1
 permissions:
   - pagerduty:read
   - pagerduty:write
@@ -83,7 +86,7 @@ commands:
   resolve:
     executable: /Users/mpeck/op/pagerduty/cog-command
     documentation: |
-      pagerduty:resolve <incident id> - Resovle the incident
+      pagerduty:resolve <incident id> - Resolve the incident
       pagerduty:resolve [-a | --as <pagerduty user email>] <incident id> Resolve the incident as the account specified by the email
 
       Returns confirmation of resolution
