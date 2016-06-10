@@ -1,6 +1,6 @@
 FROM alpine:3.3
 
-RUN apk -U add ca-certificates ruby ruby-bundler ruby-dev ruby-io-console ruby-builder ruby-irb ruby-rdoc ruby-json build-base git
+RUN apk -U add ca-certificates ruby ruby-bundler ruby-dev ruby-io-console ruby-builder ruby-irb ruby-rdoc ruby-json ruby-bigdecimal build-base git
 
 # Setup bundle user and directory
 RUN adduser -h /home/bundle -D bundle && \
