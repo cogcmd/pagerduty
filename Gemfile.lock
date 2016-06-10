@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/cog-bundles/cog-rb.git
+  remote: git://github.com/operable/cog-rb.git
   revision: 8213c9fe11d4c0b4274277d7a52018c2f601beb1
   specs:
     cog-rb (0.1.5)

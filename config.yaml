@@ -2,7 +2,7 @@
 cog_bundle_version: 3
 
 name: pagerduty
-version: 0.0.1
+version: 0.0.3
 description: Interact with the pagerduty
 docker:
   image: cogcmd/pagerduty
@@ -13,7 +13,7 @@ permissions:
   - pagerduty:alert
 commands:
   alert:
-    executable: /Users/mpeck/op/pagerduty/cog-command
+    executable: /home/bundle/cog-command
     documentation: |
       pagerduty:alert [-s|--service <service name>] <msg> - Trigger an alert on the specified service
       pagerduty:alert <msg> - Trigger an alert on the default service
@@ -39,7 +39,7 @@ commands:
         required: false
         short_flag: s
   oncall:
-    executable: /Users/mpeck/op/pagerduty/cog-command
+    executable: /home/bundle/cog-command
     documentation: |
       pagerduty:oncall - Return a list of services and the name and email of the primary oncall
       pagerduty:oncall <service> - Return the oncall for the sepcified service
@@ -51,7 +51,7 @@ commands:
 
     rules: ["allow"]
   ack:
-    executable: /Users/mpeck/op/pagerduty/cog-command
+    executable: /home/bundle/cog-command
     documentation: |
       pagerduty:ack <incident id> - Acknowledge the incident
       pagerduty:ack [-a | --as <pagerduty user email>] <incident id> Acknowledge the incident as the account specified by the email
@@ -84,7 +84,7 @@ commands:
         required: false
         short_flag: a
   resolve:
-    executable: /Users/mpeck/op/pagerduty/cog-command
+    executable: /home/bundle/cog-command
     documentation: |
       pagerduty:resolve <incident id> - Resolve the incident
       pagerduty:resolve [-a | --as <pagerduty user email>] <incident id> Resolve the incident as the account specified by the email
@@ -117,7 +117,7 @@ commands:
         required: false
         short_flag: a
   incidents:
-    executable: /Users/mpeck/op/pagerduty/cog-command
+    executable: /home/bundle/cog-command
     documentation: |
       pagerduty:incidents [-a | --acked] [-t | --triggered] [-r | --resolved] [-l | --limit]
 
