@@ -8,7 +8,9 @@
     !pagerduty:incidents
     !pagerduty:ack PHNRH53
     !pagerduty:resolve PHNRH53
+![PagerDuty Command](https://www.placehold.it/500x100)
 
+PagerDuty Command: Finding out who is currently oncall
 # Overview
 
 The `pagerduty` bundle adds five new commands: ack, resolve, alert, incidents
