@@ -3,7 +3,7 @@ cog_bundle_version: 3
 
 name: pagerduty
 version: 0.0.1
-description: Interact with the pagerduty
+description: Interact with pagerduty
 docker:
   image: cogcmd/pagerduty
   tag: 0.0.1
@@ -14,6 +14,7 @@ permissions:
 commands:
   alert:
     executable: /home/bundle/cog-command
+    description: Trigger alerts
     documentation: |
       pagerduty:alert [-s|--service <service name>] <msg> - Trigger an alert on the specified service
       pagerduty:alert <msg> - Trigger an alert on the default service
@@ -40,9 +41,10 @@ commands:
         short_flag: s
   oncall:
     executable: /home/bundle/cog-command
+    description: Find out who is on-call for all services, or for a specific service
     documentation: |
-      pagerduty:oncall - Return a list of services and the name and email of the primary oncall
-      pagerduty:oncall <service> - Return the oncall for the sepcified service
+      pagerduty:oncall - Retrieve a list of services and the name and email of the primary oncall
+      pagerduty:oncall <service> - Retrieve the oncall for the sepcified service
 
       Requires the following environment variables:
 
@@ -52,6 +54,7 @@ commands:
     rules: ["allow"]
   ack:
     executable: /home/bundle/cog-command
+    description: Acknowledge incidents
     documentation: |
       pagerduty:ack <incident id> - Acknowledge the incident
       pagerduty:ack [-a | --as <pagerduty user email>] <incident id> Acknowledge the incident as the account specified by the email
@@ -85,6 +88,7 @@ commands:
         short_flag: a
   resolve:
     executable: /home/bundle/cog-command
+    description: Resolve incidents
     documentation: |
       pagerduty:resolve <incident id> - Resolve the incident
       pagerduty:resolve [-a | --as <pagerduty user email>] <incident id> Resolve the incident as the account specified by the email
@@ -118,10 +122,11 @@ commands:
         short_flag: a
   incidents:
     executable: /home/bundle/cog-command
+    description: List incidents
     documentation: |
       pagerduty:incidents [-a | --acked] [-t | --triggered] [-r | --resolved] [-l | --limit]
 
-      Returns incidents matching the specified option. By default, only returns triggered incidents.
+      Retrieves incidents matching the specified option. By default, only returns triggered incidents.
 
       Requires the following environment variables:
 
