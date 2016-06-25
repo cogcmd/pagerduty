@@ -41,10 +41,10 @@ commands:
         short_flag: s
   oncall:
     executable: /home/bundle/cog-command
-    description: Returns the current oncall for all, or a specified service
+    description: Retrieve the current oncall for all, or a specified service
     documentation: |
-      pagerduty:oncall - Return a list of services and the name and email of the primary oncall
-      pagerduty:oncall <service> - Return the oncall for the sepcified service
+      pagerduty:oncall - Retrieve a list of services and the name and email of the primary oncall
+      pagerduty:oncall <service> - Retrieve the oncall for the sepcified service
 
       Requires the following environment variables:
 
@@ -126,7 +126,7 @@ commands:
     documentation: |
       pagerduty:incidents [-a | --acked] [-t | --triggered] [-r | --resolved] [-l | --limit]
 
-      Returns incidents matching the specified option. By default, only returns triggered incidents.
+      Retrieves incidents matching the specified option. By default, only returns triggered incidents.
 
       Requires the following environment variables:
 
