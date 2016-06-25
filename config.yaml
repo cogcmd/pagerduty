@@ -14,7 +14,7 @@ permissions:
 commands:
   alert:
     executable: /home/bundle/cog-command
-    description: "Triggers alerts"
+    description: Trigger alerts
     documentation: |
       pagerduty:alert [-s|--service <service name>] <msg> - Trigger an alert on the specified service
       pagerduty:alert <msg> - Trigger an alert on the default service
@@ -41,7 +41,7 @@ commands:
         short_flag: s
   oncall:
     executable: /home/bundle/cog-command
-    description: "Returns the current oncall for all, or a specified service"
+    description: Returns the current oncall for all, or a specified service
     documentation: |
       pagerduty:oncall - Return a list of services and the name and email of the primary oncall
       pagerduty:oncall <service> - Return the oncall for the sepcified service
@@ -54,7 +54,7 @@ commands:
     rules: ["allow"]
   ack:
     executable: /home/bundle/cog-command
-    description: "Acknowledge incidents"
+    description: Acknowledge incidents
     documentation: |
       pagerduty:ack <incident id> - Acknowledge the incident
       pagerduty:ack [-a | --as <pagerduty user email>] <incident id> Acknowledge the incident as the account specified by the email
@@ -88,7 +88,7 @@ commands:
         short_flag: a
   resolve:
     executable: /home/bundle/cog-command
-    description: "Resolve incidents"
+    description: Resolve incidents
     documentation: |
       pagerduty:resolve <incident id> - Resolve the incident
       pagerduty:resolve [-a | --as <pagerduty user email>] <incident id> Resolve the incident as the account specified by the email
@@ -122,7 +122,7 @@ commands:
         short_flag: a
   incidents:
     executable: /home/bundle/cog-command
-    description: "List incidents"
+    description: List incidents
     documentation: |
       pagerduty:incidents [-a | --acked] [-t | --triggered] [-r | --resolved] [-l | --limit]
 
