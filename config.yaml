@@ -41,7 +41,7 @@ commands:
         short_flag: s
   oncall:
     executable: /home/bundle/cog-command
-    description: Retrieve the current oncall for all, or a specified service
+    description: Find out who is on-call for all services, or for a specific service
     documentation: |
       pagerduty:oncall - Retrieve a list of services and the name and email of the primary oncall
       pagerduty:oncall <service> - Retrieve the oncall for the sepcified service
