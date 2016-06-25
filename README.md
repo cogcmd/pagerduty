@@ -8,7 +8,7 @@
     !pagerduty:incidents
     !pagerduty:ack PHNRH53
     !pagerduty:resolve PHNRH53
-![PagerDuty Command](https://raw.githubusercontent.com/cogcmd/pagerduty/master/PagerDuty_Command_Oncall.png)
+![PagerDuty Command](https://raw.githubusercontent.com/cogcmd/pagerduty/master/pagerduty.gif)
 
 PagerDuty Command: Finding out who is currently oncall
 # Overview
