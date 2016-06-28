@@ -35,18 +35,4 @@ class CogCmd::Pagerduty::Ack < Cog::Command
       fail("Couldn't find a user to make the request as.")
     end
   end
-
-  private
-
-  def user
-    user_name =
-      request.options["as"] ||
-      env_var("PAGERDUTY_EMAIL_FOR",
-              suffix: env_var("USER"),
-              required: false) ||
-      env_var("PAGERDUTY_DEFAULT_EMAIL")
-
-    @client.get('users', query: user_name)['users'].first if user_name
-  end
-
 end
