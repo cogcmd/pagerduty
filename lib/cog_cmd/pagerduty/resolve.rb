@@ -41,7 +41,8 @@ class CogCmd::Pagerduty::Resolve < Cog::Command
   def user
     user_name = request.options["as"] || env_var("PAGERDUTY_EMAIL_FOR",
                                                  suffix: env_var("USER"),
-                                                 required: false)
+                                                 required: false) ||
+                                         env_var("PAGERDUTY_DEFAULT_EMAIL")
     @client.get('users', query: user_name)['users'].first if user_name
   end
 
