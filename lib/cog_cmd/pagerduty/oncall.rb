@@ -36,12 +36,12 @@ class CogCmd::Pagerduty::Oncall < Cog::Command
       }
     }
     services = get_services
-
     services.map { |service|
       {
         name: service.name,
         id: service.id,
         oncall: users.find { |user|
+          next if user[:policy_ids].nil?
           user[:policy_ids].include?(service.escalation_policy.id)
         }.delete_if { |key, value| key == :policy_ids }
       }
