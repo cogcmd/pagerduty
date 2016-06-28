@@ -2,11 +2,11 @@
 cog_bundle_version: 3
 
 name: pagerduty
-version: 0.0.1
+version: 0.0.2
 description: Interact with pagerduty
 docker:
   image: cogcmd/pagerduty
-  tag: 0.0.1
+  tag: 0.0.2
 permissions:
   - pagerduty:read
   - pagerduty:write
