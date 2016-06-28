@@ -2,11 +2,8 @@
 cog_bundle_version: 3
 
 name: pagerduty
-version: 0.0.1
+version: 0.0.2
 description: Interact with pagerduty
-docker:
-  image: cogcmd/pagerduty
-  tag: 0.0.1
 permissions:
   - pagerduty:read
   - pagerduty:write
@@ -20,18 +17,6 @@ commands:
       pagerduty:alert <msg> - Trigger an alert on the default service
 
       Returns a confirmation message on success
-
-      Requires the following environment variables:
-
-        PAGERDUTY_ACCOUNT_SUBDOMAIN
-        PAGERDUTY_ACCOUNT_TOKEN
-
-      Behavior is configured by the following environment variables:
-
-        PAGERDUTY_DEFAULT_SERVICE_KEY - If no service is passed, this is the id of the service to use.
-
-      Note: If no service is passed and the default service key is not set, the command will fail.
-
     rules:
       - must have pagerduty:alert
     options:
@@ -45,12 +30,6 @@ commands:
     documentation: |
       pagerduty:oncall - Retrieve a list of services and the name and email of the primary oncall
       pagerduty:oncall <service> - Retrieve the oncall for the sepcified service
-
-      Requires the following environment variables:
-
-        PAGERDUTY_ACCOUNT_SUBDOMAIN
-        PAGERDUTY_ACCOUNT_TOKEN
-
     rules: ["allow"]
   ack:
     executable: /home/bundle/cog-command
@@ -60,25 +39,6 @@ commands:
       pagerduty:ack [-a | --as <pagerduty user email>] <incident id> Acknowledge the incident as the account specified by the email
 
       Returns confirmation of acknowledgement
-
-      Requires the following environment variables:
-
-        PAGERDUTY_ACCOUNT_SUBDOMAIN
-        PAGERDUTY_ACCOUNT_TOKEN
-
-      Behavior is configured by the following environment variables:
-
-        PAGERDUTY_DEFAULT_EMAIL - The default pagerduty email to acknowledge incidents as
-        PAGERDUTY_EMAIL_FOR_<COG USER> - Used to map cog users to pagerduty emails
-
-      An email mapping to a pagerduty account is required in order to ack incidents. If the
-      '--as' option has been specified then that email will be used. If not this command will
-      first look for an environment variable in the form of 'PAGERDUTY_EMAIL_FOR_<COG USER>',
-      so if your user name is 'bob', the env var will be 'PAGERDUTY_EMAIL_FOR_BOB', and use
-      that email to acknowledge the incident. If that fails it will try 'PAGERDUTY_DEFAULT_EMAIL'
-      If none of those vars are specified and the '--as' option is not passed, the command will
-      fail.
-
     rules:
       - must have pagerduty:write
     options:
@@ -94,25 +54,6 @@ commands:
       pagerduty:resolve [-a | --as <pagerduty user email>] <incident id> Resolve the incident as the account specified by the email
 
       Returns confirmation of resolution
-
-      Requires the following environment variables:
-
-        PAGERDUTY_ACCOUNT_SUBDOMAIN
-        PAGERDUTY_ACCOUNT_TOKEN
-
-      Behavior is configured by the following environment variables:
-
-        PAGERDUTY_DEFAULT_EMAIL - The default pagerduty email to acknowledge incidents as
-        PAGERDUTY_EMAIL_FOR_<COG USER> - Used to map cog users to pagerduty emails
-
-      An email mapping to a pagerduty account is required in order to resolve incidents. If the
-      '--as' option has been specified then that email will be used. If not this command will
-      first look for an environment variable in the form of 'PAGERDUTY_EMAIL_FOR_<COG USER>',
-      so if your user name is 'bob' the env var will be 'PAGERDUTY_EMAIL_FOR_BOB', and use
-      that email to acknowledge the incident. If that fails it will try 'PAGERDUTY_DEFAULT_EMAIL'
-      If none of those vars are specified and the '--as' option is not passed, the command will
-      fail.
-
     rules:
       - must have pagerduty:write
     options:
@@ -127,12 +68,6 @@ commands:
       pagerduty:incidents [-a | --acked] [-t | --triggered] [-r | --resolved] [-l | --limit]
 
       Retrieves incidents matching the specified option. By default, only returns triggered incidents.
-
-      Requires the following environment variables:
-
-        PAGERDUTY_ACCOUNT_SUBDOMAIN
-        PAGERDUTY_ACCOUNT_TOKEN
-
     rules:
       - must have pagerduty:read
     options:
