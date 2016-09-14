@@ -27,30 +27,48 @@ class CogCmd::Pagerduty::Oncall < Cog::Command
   private
 
   def oncall
-    users = @client.get('users/on_call')['users'].map { |user, acc|
-      {
-        name: user.name,
-        id: user.id,
-        email: user.email,
-        policy_ids: user.on_call.map { |oc| oc.escalation_policy.id }
-      }
-    }
-    services = get_services
-
-    services.map { |service|
-      {
-        name: service.name,
-        id: service.id,
-        oncall: users.find { |user|
-          user[:policy_ids].include?(service.escalation_policy.id)
-        }.delete_if { |key, value| key == :policy_ids }
-      }
-    }
+    users = get_users
+    if users.length > 0 then
+      get_services(users)
+    else
+      []
+    end
   end
 
-  def get_services
+  def get_services(users)
     query = request.args.join(" ")
-    @client.get('services', include: ['escalation_policy'], query: query)['services']
+    response = @client.get('services', include: ['escalation_policy'], query: query)
+    if response.nil? then
+      []
+    elsif response.has_key?("services") then
+      response["services"].map do |service|
+        {
+          name: service.name,
+          id: service.id,
+          oncall: users.find do |user|
+            user[:policy_ids].include?(service.escalation_policy.id)
+          end.delete_if { |key, value| key == :policy_ids }
+        }
+      end
+    else
+      []
+    end
+  end
+
+  def get_users
+    users = @client.get('users/on_call')['users']
+    if users.nil? then
+      []
+    else
+      users.map do |user|
+        {
+          name: user.name,
+          id: user.id,
+          email: user.email,
+          policy_ids: user.on_call.map { |oc| oc.escalation_policy.id }
+        }
+      end
+    end
   end
 
 end
