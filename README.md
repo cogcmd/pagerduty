@@ -51,6 +51,8 @@ pagerduty:alert permission. To see incidents, pagerduty:read. And to `ack` or
 
 # Configuration
 
+*The pager duty bundle still uses the v1 API. You'll need to select this when creating an account token.*
+
 pagerduty uses a few env vars to configure it. All commands require
 `PAGERDUTY_ACCOUNT_SUBDOMAIN` and `PAGERDUTY_ACCOUNT_TOKEN` to be set. That would
 be the subdomain for your PagerDuty account and the api token respectively.
