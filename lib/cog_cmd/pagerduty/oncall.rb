@@ -13,15 +13,8 @@ class CogCmd::Pagerduty::Oncall < Cog::Command
   end
 
   def run_command
-    resp = oncall
-    if resp.length > 0
-      response.template = 'oncall'
-      response.content = resp
-    else
-      response.template = 'noresults'
-      response['body'] = []
-    end
-
+    response.template = 'oncall'
+    response.content = resp
   end
 
   private
