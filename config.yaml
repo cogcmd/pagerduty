@@ -2,7 +2,7 @@
 cog_bundle_version: 4
 
 name: pagerduty
-version: 0.0.3
+version: 0.0.4
 description: Interact with pagerduty
 long_description: |
   The pagerduty bundle can be configured with a few env vars. All
@@ -29,7 +29,7 @@ author: Matthew Peck <matt@operable.io>
 homepage: https://github.com/cogcmd/pagerduty
 docker:
   image: cogcmd/pagerduty
-  tag: 0.0.3
+  tag: 0.0.4
 permissions:
   - pagerduty:read
   - pagerduty:write
