@@ -1,12 +1,35 @@
 ---
-cog_bundle_version: 3
+cog_bundle_version: 4
 
 name: pagerduty
-version: 0.0.2
+version: 0.0.4
 description: Interact with pagerduty
+long_description: |
+  The pagerduty bundle can be configured with a few env vars. All
+  commands require PAGERDUTY_ACCOUNT_SUBDOMAIN and
+  PAGERDUTY_ACCOUNT_TOKEN to be set.  That would be the subdomain for
+  your PagerDuty account and the V1 API token respectively.
+
+  The alert command has an optional var, PAGERDUTY_DEFAULT_SERVICE_KEY.
+  This is the integration key found on the integration tab for the
+  service on PagerDuty's web UI. If set, any alerts that don't specify a
+  service will be sent here. Note that if the service key is not set or
+  a service isn't passed to the command, it will fail.
+
+  Commands ack and resolve have a couple extra vars.
+  PAGERDUTY_DEFAULT_EMAIL, similar to PAGERDUTY_DEFAULT_SERVICE_KEY,
+  will be used as the requester when acking or resolving incidents.
+  Additionally, you may attach the requester to cog accounts. Using vars
+  in the form, PAGERDUTY_EMAIL_FOR_<COG_USER> you can specify which
+  PagerDuty email is associated with which Cog user.  So for example, if
+  your Cog username is 'bob', you would set the var
+  PAGERDUTY_EMAIL_FOR_BOB. Then whenever you ack or resolve the proper
+  PagerDuty account is associated with the action.
+author: Matthew Peck <matt@operable.io>
+homepage: https://github.com/cogcmd/pagerduty
 docker:
   image: cogcmd/pagerduty
-  tag: 0.0.2
+  tag: 0.0.4
 permissions:
   - pagerduty:read
   - pagerduty:write
@@ -15,10 +38,8 @@ commands:
   alert:
     executable: /home/bundle/cog-command
     description: Trigger alerts
-    documentation: |
-      pagerduty:alert [-s|--service <service name>] <msg> - Trigger an alert on the specified service
-      pagerduty:alert <msg> - Trigger an alert on the default service
-
+    arguments: "<message>"
+    long_description: |
       Returns a confirmation message on success
 
       Requires the following environment variables:
@@ -28,10 +49,9 @@ commands:
 
       Behavior is configured by the following environment variables:
 
-        PAGERDUTY_DEFAULT_SERVICE_KEY - If no service is passed, this is the id of the service to use.
-
-      Note: If no service is passed and the default service key is not set, the command will fail.
-
+        PAGERDUTY_DEFAULT_SERVICE_KEY
+          If no service is passed, this is the id of the service to use.
+    notes: If no service is passed and the default service key is not set, the command will fail.
     rules:
       - must have pagerduty:alert
     options:
@@ -42,23 +62,17 @@ commands:
   oncall:
     executable: /home/bundle/cog-command
     description: Find out who is on-call for all services, or for a specific service
-    documentation: |
-      pagerduty:oncall - Retrieve a list of services and the name and email of the primary oncall
-      pagerduty:oncall <service> - Retrieve the oncall for the sepcified service
-
+    long_description: |
       Requires the following environment variables:
 
         PAGERDUTY_ACCOUNT_SUBDOMAIN
         PAGERDUTY_ACCOUNT_TOKEN
-
+    arguments: "[service]"
     rules: ["allow"]
   ack:
     executable: /home/bundle/cog-command
     description: Acknowledge incidents
-    documentation: |
-      pagerduty:ack <incident id> - Acknowledge the incident
-      pagerduty:ack [-a | --as <pagerduty user email>] <incident id> Acknowledge the incident as the account specified by the email
-
+    long_description: |
       Returns confirmation of acknowledgement
 
       Requires the following environment variables:
@@ -68,17 +82,22 @@ commands:
 
       Behavior is configured by the following environment variables:
 
-        PAGERDUTY_DEFAULT_EMAIL - The default pagerduty email to acknowledge incidents as
-        PAGERDUTY_EMAIL_FOR_<COG USER> - Used to map cog users to pagerduty emails
+        PAGERDUTY_DEFAULT_EMAIL
+          The default pagerduty email to acknowledge incidents as
 
-      An email mapping to a pagerduty account is required in order to ack incidents. If the
-      '--as' option has been specified then that email will be used. If not this command will
-      first look for an environment variable in the form of 'PAGERDUTY_EMAIL_FOR_<COG USER>',
-      so if your user name is 'bob', the env var will be 'PAGERDUTY_EMAIL_FOR_BOB', and use
-      that email to acknowledge the incident. If that fails it will try 'PAGERDUTY_DEFAULT_EMAIL'
-      If none of those vars are specified and the '--as' option is not passed, the command will
-      fail.
+        PAGERDUTY_EMAIL_FOR_<COG_USER>
+          Used to map cog users to pagerduty emails
 
+      An email mapping to a pagerduty account is required in order to
+      ack incidents. If the '--as' option has been specified then that
+      email will be used. If not this command will first look for an
+      environment variable in the form of
+      'PAGERDUTY_EMAIL_FOR_<COG_USER>', so if your user name is 'bob',
+      the env var will be 'PAGERDUTY_EMAIL_FOR_BOB', and use that email
+      to acknowledge the incident. If that fails it will try
+      'PAGERDUTY_DEFAULT_EMAIL' If none of those vars are specified and
+      the '--as' option is not passed, the command will fail.
+    arguments: "<incident-id>"
     rules:
       - must have pagerduty:write
     options:
@@ -86,13 +105,11 @@ commands:
         type: string
         required: false
         short_flag: a
+        description: The email of a PagerDuty user
   resolve:
     executable: /home/bundle/cog-command
     description: Resolve incidents
-    documentation: |
-      pagerduty:resolve <incident id> - Resolve the incident
-      pagerduty:resolve [-a | --as <pagerduty user email>] <incident id> Resolve the incident as the account specified by the email
-
+    long_description: |
       Returns confirmation of resolution
 
       Requires the following environment variables:
@@ -102,17 +119,22 @@ commands:
 
       Behavior is configured by the following environment variables:
 
-        PAGERDUTY_DEFAULT_EMAIL - The default pagerduty email to acknowledge incidents as
-        PAGERDUTY_EMAIL_FOR_<COG USER> - Used to map cog users to pagerduty emails
+        PAGERDUTY_DEFAULT_EMAIL
+          The default pagerduty email to acknowledge incidents as
 
-      An email mapping to a pagerduty account is required in order to resolve incidents. If the
-      '--as' option has been specified then that email will be used. If not this command will
-      first look for an environment variable in the form of 'PAGERDUTY_EMAIL_FOR_<COG USER>',
-      so if your user name is 'bob' the env var will be 'PAGERDUTY_EMAIL_FOR_BOB', and use
-      that email to acknowledge the incident. If that fails it will try 'PAGERDUTY_DEFAULT_EMAIL'
-      If none of those vars are specified and the '--as' option is not passed, the command will
-      fail.
+        PAGERDUTY_EMAIL_FOR_<COG_USER>
+          Used to map cog users to pagerduty emails
 
+      An email mapping to a pagerduty account is required in order to
+      resolve incidents. If the '--as' option has been specified then
+      that email will be used. If not this command will first look for
+      an environment variable in the form of
+      'PAGERDUTY_EMAIL_FOR_<COG_USER>', so if your user name is 'bob'
+      the env var will be 'PAGERDUTY_EMAIL_FOR_BOB', and use that email
+      to acknowledge the incident. If that fails it will try
+      'PAGERDUTY_DEFAULT_EMAIL' If none of those vars are specified and
+      the '--as' option is not passed, the command will fail.
+    arguments: "<incident-id>"
     rules:
       - must have pagerduty:write
     options:
@@ -120,19 +142,18 @@ commands:
         type: string
         required: false
         short_flag: a
+        description: The email of a PagerDuty user
   incidents:
     executable: /home/bundle/cog-command
     description: List incidents
-    documentation: |
-      pagerduty:incidents [-a | --acked] [-t | --triggered] [-r | --resolved] [-l | --limit]
-
-      Retrieves incidents matching the specified option. By default, only returns triggered incidents.
+    long_description: |
+      Retrieves incidents matching the specified option. By default,
+      only returns triggered incidents.
 
       Requires the following environment variables:
 
         PAGERDUTY_ACCOUNT_SUBDOMAIN
         PAGERDUTY_ACCOUNT_TOKEN
-
     rules:
       - must have pagerduty:read
     options:
@@ -154,11 +175,19 @@ commands:
         short_flag: l
 templates:
   oncall:
-    slack: "{{ name }} - {{#oncall}}{{name}} <{{email}}> {{/oncall}}"
-    hipchat: "{{ name }} - {{ oncall.name }}({{ oncall.email }})"
+    body: |
+      ~each var=$results~
+      | ~$item.name~ |
+      | --- |
+      ~each var=$item.oncall~
+      | ~$item.name~ <<~$item.email~>> |
+      ~end~
+      ~br~
+      ~end~
   incidents:
-    slack: "Service: {{ service.name }} {{ url }}\nStatus: {{ status }}\n{{ summary.subject }} {{ summary.description }}\n"
-    hipchat: "Service: {{ service.name }} {{ url }}\nStatus: {{ status }}\n{{ summary.subject }} {{ summary.description }}\n"
-  noresults:
-    slack: "Sorry, no results were returned."
-    hipchat: "Sorry, no results were returned."
+    body: |
+      | Service | Status | Subject | URL |
+      | ------- | ------ | ------- | --- |
+      ~each var=$results~
+      | ~$item.service.name~ | ~$item.status~ | ~$item.summary.subject~ | ~$item.url~ |
+      ~end~

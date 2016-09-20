@@ -14,24 +14,19 @@ class CogCmd::Pagerduty::Incidents < Cog::Command
   end
 
   def run_command
-    incidents = incidents(request)
+    incidents = incidents(request).map do |incident|
+      { id: incident.id,
+        urgency: incident.urgency,
+        summary: incident.trigger_summary_data,
+        incident_key: incident.incident_key,
+        created_on: incident.created_on,
+        service: incident.service,
+        url: incident.html_url,
+        status: incident.status }
+    end
 
     response.template = 'incidents'
-
-    if incidents.length > 0
-      response.content = incidents.map {|incident|
-        {id: incident.id,
-         urgency: incident.urgency,
-         summary: incident.trigger_summary_data,
-         incident_key: incident.incident_key,
-         created_on: incident.created_on,
-         service: incident.service,
-         url: incident.html_url,
-         status: incident.status}
-      }
-    else
-      response['body'] = "No incidents found."
-    end
+    response.content = incidents
   end
 
   private
