@@ -73,7 +73,7 @@ action.
 
 # Installing
 
-    curl -O https://github.com/cogcmd/pagerduty/blob/master/config.yaml
+    curl -O https://raw.githubusercontent.com/cogcmd/pagerduty/master/config.yaml
     cogctl bundle install config.yaml
 
 # Building
