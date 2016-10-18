@@ -14,7 +14,7 @@ class CogCmd::Pagerduty::Oncall < Cog::Command
 
   def run_command
     response.template = 'oncall'
-    response.content = resp
+    response.content = oncall
   end
 
   private
